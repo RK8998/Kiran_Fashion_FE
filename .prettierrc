@@ -1,6 +1,6 @@
 {
   "semi": true,
-  "singleQuote": false,
+  "singleQuote": true,
   "trailingComma": "es5",
   "printWidth": 100,
   "tabWidth": 2,
@@ -11,5 +11,12 @@
   "jsxSingleQuote": false,
   "jsxBracketSameLine": false,
   "proseWrap": "preserve",
-  "quoteProps": "as-needed"
+  "quoteProps": "as-needed",
+  "prettier/prettier": [
+    "error",
+    {
+      "singleQuote": true,
+      "parser": "flow"
+    }
+  ]
 }
