@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 import { AnimatedPage } from '@/components/AnimatedPage';
 
-const Home: FC = () => {
+const Home: React.FC = () => {
   return (
     <AnimatedPage>
       {' '}
