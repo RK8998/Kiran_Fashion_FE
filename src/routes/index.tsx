@@ -8,6 +8,8 @@ import Products from '@/pages/Products';
 import Sales from '@/pages/Sales';
 import { RouterErrorElement } from '@/pages/ErrorBoundary/RouterErrorElement';
 import { PageNotFound } from '@/pages/Auth/PageNotFound';
+import LoginPage from '@/pages/Auth/Login';
+import AddEditNotes from '@/pages/Notes/AddEditNotes';
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +38,9 @@ export const router = createBrowserRouter([
         path: 'notes',
         element: <Notes />,
       },
+      { path: 'notes/add', element: <AddEditNotes /> },
     ],
   },
+  { path: '/login', element: <LoginPage /> },
   { path: '*', element: <PageNotFound /> },
 ]);

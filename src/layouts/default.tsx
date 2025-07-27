@@ -38,7 +38,7 @@ export default function DefaultLayout() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const activePath = navItems.find((n) => n.path === location.pathname)?.path ?? '/';
+  const activePath = navItems.find((n) => location.pathname === n.path)?.path ?? '/';
 
   const activeLabel = navItems.find((n) => n.path === activePath)?.label ?? 'Dashboard';
 
