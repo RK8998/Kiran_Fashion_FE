@@ -10,6 +10,7 @@ import { RouterErrorElement } from '@/pages/ErrorBoundary/RouterErrorElement';
 import { PageNotFound } from '@/pages/Auth/PageNotFound';
 import LoginPage from '@/pages/Auth/Login';
 import AddEditNotes from '@/pages/Notes/AddEditNotes';
+import AddEditProduct from '@/pages/Products/AddEditProduct';
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
         path: 'products',
         element: <Products />,
       },
+      { path: 'products/add', element: <AddEditProduct /> },
       {
         path: 'sales',
         element: <Sales />,
