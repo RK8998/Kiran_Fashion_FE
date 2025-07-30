@@ -8,6 +8,7 @@ import AppPagination from '@/components/AppPagination';
 import AppButton from '@/components/AppButton';
 
 import { useNavigate } from 'react-router-dom';
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 
 const dummyNotes = [
   { id: 1, title: 'Meeting notes', date: '2025-07-25' },
@@ -19,6 +20,10 @@ const Notes: React.FC = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
 
+  const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+  const handleOpen = () => setIsOpenDelete(true);
+  const handleClose = () => setIsOpenDelete(false);
+
   const onAddNotes = () => navigate('/notes/add');
 
   const handleView = (id: number) => {
@@ -29,8 +34,8 @@ const Notes: React.FC = () => {
     console.log('Edit:', id);
   };
 
-  const handleDelete = (id: number) => {
-    console.log('Delete:', id);
+  const handleDelete = () => {
+    console.log('Delete:');
   };
 
   return (
@@ -94,7 +99,7 @@ const Notes: React.FC = () => {
                         radius="full"
                         size="sm"
                         variant="flat"
-                        onPress={() => handleDelete(note.id)}
+                        onPress={() => handleOpen()}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -108,6 +113,8 @@ const Notes: React.FC = () => {
 
         <AppPagination />
       </div>
+
+      <ConfirmDeleteModal isOpen={isOpenDelete} onClose={handleClose} onConfirm={handleDelete} />
     </AnimatedPage>
   );
 };

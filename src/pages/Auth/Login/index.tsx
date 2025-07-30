@@ -1,16 +1,52 @@
-import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/card';
 import { Input } from '@heroui/input';
+import { useForm, Controller } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 import AppButton from '@/components/AppButton';
 import LoginImage from '@/assets/images/login.svg';
+import { loginService } from '@/services/auth';
+import { mutationOnErrorHandler } from '@/helpers';
+import { AUTH_TOKEN, localStorageHandler } from '@/helpers/storage';
+import { AppToast } from '@/helpers/toast';
+import { LoginFormTypes } from '@/constants/formTypes';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    console.log({ email, password });
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<LoginFormTypes>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const { mutateAsync: onLoginHandler, isPending } = useMutation({
+    mutationKey: ['auth-login'],
+    mutationFn: async (data: LoginFormTypes) => {
+      const response = await loginService(data);
+
+      return response;
+    },
+    onSuccess: (response) => {
+      const authToken = response?.data?.data?.token;
+
+      localStorageHandler('SET', AUTH_TOKEN, JSON.stringify(authToken));
+      navigate('/', { replace: true });
+    },
+    onError: (error) => {
+      mutationOnErrorHandler({ error: error as AxiosError });
+    },
+  });
+
+  const onSubmit = async (data: LoginFormTypes) => {
+    AppToast(onLoginHandler(data), 'Login in process');
   };
 
   return (
@@ -29,35 +65,69 @@ const LoginPage = () => {
         <div className="w-full lg:w-1/2 p-8 flex items-center justify-center">
           <Card className="w-full max-w-md border border-gray-200 shadow-xl rounded-2xl">
             <CardHeader className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800">Welcome Back 👋</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Kiran Fashion</h2>
               {/* <p className="text-sm text-gray-500 mt-1">Please login to your account</p> */}
             </CardHeader>
             <CardBody className="space-y-5 px-6 pb-6">
-              <div>
-                <label htmlFor="email">Email</label>
-                <Input
-                  id="email"
-                  placeholder="example@domain.com"
-                  radius="lg"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+              <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+                {/* Email Field */}
+                <div>
+                  <label htmlFor="email">Email</label>
+                  <Controller
+                    control={control}
+                    name="email"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id="email"
+                        placeholder="example@domain.com"
+                        radius="lg"
+                        type="email"
+                      />
+                    )}
+                    rules={{
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: 'Invalid email address',
+                      },
+                    }}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                  )}
+                </div>
 
-              <div>
-                <label htmlFor="password">Password</label>
-                <Input
-                  id="password"
-                  placeholder="Enter your password"
-                  radius="lg"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+                {/* Password Field */}
+                <div>
+                  <label htmlFor="password">Password</label>
+                  <Controller
+                    control={control}
+                    name="password"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id="password"
+                        placeholder="Enter your password"
+                        radius="lg"
+                        type="password"
+                      />
+                    )}
+                    rules={{ required: 'Password is required' }}
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
+                  )}
+                </div>
 
-              <AppButton color="primary" size="lg" title="Sign In" onClick={handleLogin} />
+                <AppButton
+                  color="primary"
+                  isLoading={isPending}
+                  size="lg"
+                  title="Sign In"
+                  type="submit"
+                />
+              </form>
             </CardBody>
           </Card>
         </div>
