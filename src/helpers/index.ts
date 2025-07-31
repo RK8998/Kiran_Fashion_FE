@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+import moment from 'moment';
 
 import { displayErrorToast } from './toast';
 
@@ -25,3 +26,7 @@ export function mutationOnErrorHandler({ error }: MutationError) {
     }
   }
 }
+
+export const getFormattedDate = (date: string) => {
+  return moment(date).format('DD/MM/YYYY');
+};

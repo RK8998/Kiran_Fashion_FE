@@ -2,23 +2,27 @@ import React, { useState } from 'react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
 import { Pencil, Trash2, PlusIcon, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { AnimatedPage } from '@/components/AnimatedPage';
 import AppPagination from '@/components/AppPagination';
 import AppButton from '@/components/AppButton';
-
-import { useNavigate } from 'react-router-dom';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
-
-const dummyNotes = [
-  { id: 1, title: 'Meeting notes', date: '2025-07-25' },
-  { id: 2, title: 'Shopping list', date: '2025-07-20' },
-  { id: 3, title: 'Ideas for new app', date: '2025-07-10' },
-];
+import { getNotesListService } from '@/services/notes';
+import { getFormattedDate } from '@/helpers';
+import useDebounce from '@/hooks/useDebounce';
+import EmptyState from '@/components/EmptyState';
 
 const Notes: React.FC = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+
+  const debounceSearch = useDebounce(search);
+
+  const [page, setPage] = useState(1);
+
+  const onPageChange = (page: number) => setPage(page);
 
   const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
   const handleOpen = () => setIsOpenDelete(true);
@@ -26,16 +30,31 @@ const Notes: React.FC = () => {
 
   const onAddNotes = () => navigate('/notes/add');
 
+  const { data: notesList } = useQuery({
+    queryKey: ['notes', 'list', { page, search: debounceSearch }],
+    queryFn: async () => {
+      const params = {
+        page,
+        rows: 10,
+        search: debounceSearch,
+      };
+      const response = await getNotesListService(params);
+
+      return response?.data?.data;
+    },
+    placeholderData: keepPreviousData,
+  });
+
   const handleView = (id: number) => {
-    console.log('View:', id);
+    // console.log('View:', id);
   };
 
   const handleEdit = (id: number) => {
-    console.log('Edit:', id);
+    // console.log('Edit:', id);
   };
 
   const handleDelete = () => {
-    console.log('Delete:');
+    // console.log('Delete:');
   };
 
   return (
@@ -63,55 +82,67 @@ const Notes: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200 text-sm">
               <thead className="bg-primary-50 from-purple-50 to-indigo-50 text-primary-600 font-semibold text-sm">
                 <tr>
+                  <th className="px-6 py-4 text-left">No.</th>
                   <th className="px-6 py-4 text-left">Title</th>
+                  <th className="px-6 py-4 text-left">Description</th>
                   <th className="px-6 py-4 text-left">Date</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
-                {dummyNotes.map((note) => (
-                  <tr key={note.id} className="hover:bg-gray-50 transition-all duration-150">
-                    <td className="px-6 py-4 font-medium text-gray-800">{note.title}</td>
-                    <td className="px-6 py-4 text-gray-500">{note.date}</td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <Button
-                        className="text-gray-500 bg-gray-50"
-                        radius="full"
-                        size="sm"
-                        variant="flat"
-                        onPress={() => handleView(note.id)}
-                      >
-                        <Eye className="w-4 h-4" />
-                      </Button>
+                {notesList && notesList?.results?.length ? (
+                  notesList?.results?.map((note: { [key: string]: any }, index: number) => (
+                    <tr key={note.id} className="hover:bg-gray-50 transition-all duration-150">
+                      <td className="px-6 py-4">{index + 1}.</td>
+                      <td className="px-6 py-4">{note.title}</td>
+                      <td className="px-6 py-4">{note.description}</td>
+                      <td className="px-6 py-4">{getFormattedDate(note.created_at)}</td>
+                      <td className="px-6 py-4 text-right space-x-2">
+                        <Button
+                          className="text-gray-500 bg-gray-50"
+                          radius="full"
+                          size="sm"
+                          variant="flat"
+                          onPress={() => handleView(note.id)}
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
 
-                      <Button
-                        className="text-primary-500 bg-primary-50"
-                        radius="full"
-                        size="sm"
-                        variant="flat"
-                        onPress={() => handleEdit(note.id)}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
+                        <Button
+                          className="text-primary-500 bg-primary-50"
+                          radius="full"
+                          size="sm"
+                          variant="flat"
+                          onPress={() => handleEdit(note.id)}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
 
-                      <Button
-                        className="text-red-500 bg-red-50"
-                        radius="full"
-                        size="sm"
-                        variant="flat"
-                        onPress={() => handleOpen()}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
+                        <Button
+                          className="text-red-500 bg-red-50"
+                          radius="full"
+                          size="sm"
+                          variant="flat"
+                          onPress={() => handleOpen()}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <EmptyState colSpan={5} />
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
-        <AppPagination />
+        <AppPagination
+          currentPage={page}
+          totalRecords={notesList?.total}
+          onPageChange={onPageChange}
+        />
       </div>
 
       <ConfirmDeleteModal isOpen={isOpenDelete} onClose={handleClose} onConfirm={handleDelete} />

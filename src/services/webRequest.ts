@@ -18,7 +18,7 @@ Axios.interceptors.request.use(
     const authToken = localStorageHandler('GET', AUTH_TOKEN);
 
     if (config.headers) {
-      config.headers.Authorization = `token ${authToken}`;
+      config.headers.Authorization = `Bearer ${authToken}`;
     }
 
     return config;
@@ -39,7 +39,8 @@ Axios.interceptors.response.use(
 
     if (status === 401 || data?.status === 401) {
       localStorageHandler('REMOVE', AUTH_TOKEN);
-      window.location.reload(); // Or redirect to login if needed
+      // window.location.reload(); // Or redirect to login if needed
+      window.location.href = '/login';
 
       return;
     }

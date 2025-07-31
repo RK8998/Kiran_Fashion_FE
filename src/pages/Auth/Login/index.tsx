@@ -37,7 +37,7 @@ const LoginPage = () => {
     onSuccess: (response) => {
       const authToken = response?.data?.data?.token;
 
-      localStorageHandler('SET', AUTH_TOKEN, JSON.stringify(authToken));
+      localStorageHandler('SET', AUTH_TOKEN, authToken);
       navigate('/', { replace: true });
     },
     onError: (error) => {
