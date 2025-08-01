@@ -11,6 +11,7 @@ import { PageNotFound } from '@/pages/Auth/PageNotFound';
 import LoginPage from '@/pages/Auth/Login';
 import AddEditNotes from '@/pages/Notes/AddEditNotes';
 import AddEditProduct from '@/pages/Products/AddEditProduct';
+import ViewNote from '@/pages/Notes/ViewNote';
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +41,9 @@ export const router = createBrowserRouter([
         path: 'notes',
         element: <Notes />,
       },
+      { path: 'notes/:id', element: <ViewNote /> },
       { path: 'notes/add', element: <AddEditNotes /> },
+      { path: 'notes/edit/:id', element: <AddEditNotes /> },
     ],
   },
   { path: '/login', element: <LoginPage /> },
