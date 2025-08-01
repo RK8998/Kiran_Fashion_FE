@@ -13,6 +13,8 @@ import { AUTH_TOKEN, localStorageHandler } from '@/helpers/storage';
 import { AppToast } from '@/helpers/toast';
 import { LoginFormTypes } from '@/constants/formTypes';
 
+const APP_NAME = import.meta.env.VITE_APP_NAME;
+
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -51,12 +53,12 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-primary-100 via-rose-50 to-primary-100 px-4">
-      <div className="flex w-full max-w-6xl shadow-lg rounded-3xl overflow-hidden bg-white bg-opacity-80 backdrop-blur-lg">
+      <div className="flex w-full max-w-6xl rounded-3xl overflow-hidden bg-white bg-opacity-80 backdrop-blur-lg">
         {/* Left */}
         <div className="hidden lg:flex w-1/2 items-center justify-center p-8 bg-primary-50">
           <div className="text-center space-y-4">
             <img alt="Login visual" className="max-w-xs mx-auto" src={LoginImage} />
-            <h1 className="text-3xl font-bold text-primary-600">Kiran Fashion</h1>
+            <h1 className="text-3xl font-bold text-primary-600">{APP_NAME.split('_').join(' ')}</h1>
             <p className="text-gray-500">Your favorite fashion destination</p>
           </div>
         </div>
@@ -79,7 +81,9 @@ const LoginPage = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
+                        errorMessage={errors.email && errors.email.message}
                         id="email"
+                        isInvalid={!!errors.email}
                         placeholder="example@domain.com"
                         radius="lg"
                         type="email"
@@ -93,9 +97,6 @@ const LoginPage = () => {
                       },
                     }}
                   />
-                  {errors.email && (
-                    <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
-                  )}
                 </div>
 
                 {/* Password Field */}
@@ -107,7 +108,9 @@ const LoginPage = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
+                        errorMessage={errors.password && errors.password.message}
                         id="password"
+                        isInvalid={!!errors.password}
                         placeholder="Enter your password"
                         radius="lg"
                         type="password"
@@ -115,9 +118,6 @@ const LoginPage = () => {
                     )}
                     rules={{ required: 'Password is required' }}
                   />
-                  {errors.password && (
-                    <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
-                  )}
                 </div>
 
                 <AppButton

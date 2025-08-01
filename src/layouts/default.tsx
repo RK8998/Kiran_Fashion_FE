@@ -11,7 +11,7 @@ import { navItems } from '@/constants';
 const ACCENT = 'border-primary-400';
 const ACCENT_BG = 'bg-primary-50';
 const ACCENT_TEXT = 'text-primary-500';
-const BRAND_NAME = 'Kiran Fashion';
+const APP_NAME = import.meta.env.VITE_APP_NAME;
 
 /** Accessible overlay close handler */
 function Overlay({ onClose }: { onClose: () => void }) {
@@ -100,7 +100,7 @@ export default function DefaultLayout() {
               ACCENT
             )}
           >
-            {BRAND_NAME}
+            {APP_NAME.split('_').join(' ')}
           </span>
         </div>
         {/* Nav */}
@@ -131,7 +131,7 @@ export default function DefaultLayout() {
                     ACCENT
                   )}
                 >
-                  {BRAND_NAME}
+                  {APP_NAME}
                 </span>
                 <button
                   aria-label="Close menu"
@@ -155,7 +155,7 @@ export default function DefaultLayout() {
       {/* Main Column */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="h-16 flex items-center justify-between px-4 md:px-8 bg-white shadow-sm">
+        <header className="app-header h-16 flex items-center justify-between px-4 md:px-8 bg-white shadow-sm">
           {/* Mobile hamburger */}
           <button
             aria-label="Open menu"

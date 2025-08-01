@@ -1,3 +1,19 @@
 @import 'tailwindcss';
 
 @config "../../tailwind.config.js";
+
+body {
+  overflow: hidden;
+}
+
+.app-header {
+  position: fixed;
+  width: 100%;
+  z-index: 9;
+}
+
+main {
+  margin-top: 64px;
+  overflow-y: auto;
+  height: calc(100vh - 124px);
+}

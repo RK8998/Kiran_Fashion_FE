@@ -29,7 +29,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
               <Button color="secondary" variant="light" onPress={onClose}>
                 Close
               </Button>
-              <Button color="danger" onPress={onClose}>
+              <Button autoFocus color="danger" onPress={onConfirm}>
                 Delete
               </Button>
             </ModalFooter>
