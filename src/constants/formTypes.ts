@@ -15,3 +15,8 @@ export type UserFormTypes = {
   password?: string;
   [key: string]: any; // Allow additional properties
 };
+
+export type ProductFormTypes = {
+  name: string;
+  remark: string;
+};

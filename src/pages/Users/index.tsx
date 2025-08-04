@@ -12,9 +12,7 @@ import {
   TableCell,
   Pagination,
   Spinner,
-  Chip,
   Switch,
-  Tooltip,
 } from '@heroui/react';
 import { useNavigate } from 'react-router-dom';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
@@ -26,7 +24,6 @@ import useDebounce from '@/hooks/useDebounce';
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { getFormattedDate, mutationOnErrorHandler } from '@/helpers';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
-import { UserFormTypes } from '@/constants/formTypes';
 
 export const columns = [
   { name: 'NO', uid: 'no' },
@@ -79,7 +76,7 @@ const Users: React.FC = () => {
   });
 
   const { mutateAsync: onDeleteUser } = useMutation({
-    mutationKey: ['auth-login'],
+    mutationKey: ['delete-user'],
     mutationFn: async () => {
       const response = await deleteUsersService(deleteId);
 

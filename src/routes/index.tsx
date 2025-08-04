@@ -15,6 +15,7 @@ import ViewNote from '@/pages/Notes/ViewNote';
 import ViewUser from '@/pages/Users/ViewUser';
 import AddEditUser from '@/pages/Users/AddEditUser';
 import ChangePassword from '@/pages/Users/ChangePassword';
+import ViewProduct from '@/pages/Products/ViewProduct';
 
 export const router = createBrowserRouter([
   {
@@ -51,7 +52,15 @@ export const router = createBrowserRouter([
         path: 'products',
         element: <Products />,
       },
+      {
+        path: 'products/:id',
+        element: <ViewProduct />,
+      },
       { path: 'products/add', element: <AddEditProduct /> },
+      {
+        path: 'products/edit/:id',
+        element: <AddEditProduct />,
+      },
       {
         path: 'sales',
         element: <Sales />,

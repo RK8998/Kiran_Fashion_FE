@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { BackpackIcon, MoveLeftIcon } from 'lucide-react';
+import { BackpackIcon, ArrowLeft } from 'lucide-react';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';
@@ -107,7 +107,7 @@ const AddEditUser: React.FC = () => {
       <div className="min-w-full mx-auto p-4">
         <Card className="p-6 shadow-sm rounded-2xl">
           <div className="flex gap-2 justify-start items-center mb-6">
-            <MoveLeftIcon className="cursor-pointer" onClick={onBack} />
+            <ArrowLeft className="cursor-pointer" onClick={onBack} />
 
             <h2 className="text-2xl font-semibold text-gray-800">
               {isEditMode ? 'Edit' : 'Create'} User
@@ -240,7 +240,7 @@ const AddEditUser: React.FC = () => {
               <AppButton
                 color="primary"
                 isLoading={isPendingCreate || isPendingUpdate}
-                title={isEditMode ? 'Update' : 'Save Note'}
+                title={isEditMode ? 'Update' : 'Save User'}
                 type="submit"
               />
             </div>
