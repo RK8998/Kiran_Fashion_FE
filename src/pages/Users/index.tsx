@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
-import { Pencil, Trash2, PlusIcon, Eye } from 'lucide-react';
+import { Pencil, Trash2, PlusIcon, Eye, LockIcon } from 'lucide-react';
 import { AxiosError } from 'axios';
 import {
   Table,
@@ -13,17 +13,20 @@ import {
   Pagination,
   Spinner,
   Chip,
+  Switch,
+  Tooltip,
 } from '@heroui/react';
 import { useNavigate } from 'react-router-dom';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';
-import { deleteUsersService, getUsersListService } from '@/services/user';
+import { deleteUsersService, getUsersListService, updateUsersService } from '@/services/user';
 import useDebounce from '@/hooks/useDebounce';
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { getFormattedDate, mutationOnErrorHandler } from '@/helpers';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
+import { UserFormTypes } from '@/constants/formTypes';
 
 export const columns = [
   { name: 'NO', uid: 'no' },
@@ -34,6 +37,10 @@ export const columns = [
   { name: 'STATUS', uid: 'isActive' },
   { name: 'ACTIONS', uid: 'actions' },
 ];
+
+export type UserStatusTypes = {
+  isActive: boolean;
+};
 
 const Users: React.FC = () => {
   const navigate = useNavigate();
@@ -88,12 +95,43 @@ const Users: React.FC = () => {
     },
   });
 
+  const { mutateAsync: onUpdateUsers } = useMutation({
+    mutationKey: ['update-user'],
+    mutationFn: async ({ userId, data }: { userId: string; data: UserStatusTypes }) => {
+      if (!userId) throw new Error('userId is undefined');
+
+      const response = await updateUsersService(userId, data);
+
+      return response?.data;
+    },
+    onSuccess: (response) => {
+      displaySuccessToast(response?.message);
+      refetchUsers();
+    },
+    onError: (error) => {
+      mutationOnErrorHandler({ error: error as AxiosError });
+    },
+  });
+
   const handleView = (id: number) => {
     navigate(`/users/${id}`);
   };
 
   const handleEdit = (id: number) => {
     navigate(`edit/${id}`);
+  };
+
+  const handleStatus = (e: React.ChangeEvent<HTMLInputElement>, user: Record<string, any>) => {
+    const updatedUser: UserStatusTypes = { isActive: e?.target?.checked };
+
+    AppToast(
+      onUpdateUsers({ userId: user._id, data: updatedUser }),
+      'User status update in progress'
+    );
+  };
+
+  const handleChangePassword = (id: number) => {
+    navigate(`change-password/${id}`);
   };
 
   const handleDelete = () => {
@@ -113,14 +151,11 @@ const Users: React.FC = () => {
 
         case 'isActive':
           return (
-            <Chip
-              className="capitalize"
-              color={cellValue ? 'success' : 'danger'}
-              size="sm"
-              variant="flat"
-            >
-              {cellValue ? 'Active' : 'Inactive'}
-            </Chip>
+            <Switch
+              color="primary"
+              isSelected={cellValue}
+              onChange={(e) => handleStatus(e, record)}
+            />
           );
 
         case 'actions':
@@ -157,6 +192,16 @@ const Users: React.FC = () => {
                 }}
               >
                 <Trash2 className="w-4 h-4" />
+              </Button>
+
+              <Button
+                className="text-yellow-500 bg-yellow-50"
+                radius="full"
+                size="sm"
+                variant="flat"
+                onPress={() => handleChangePassword(record._id)}
+              >
+                <LockIcon className="w-4 h-4" />
               </Button>
             </div>
           );

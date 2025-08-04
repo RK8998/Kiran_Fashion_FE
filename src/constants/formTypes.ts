@@ -9,8 +9,9 @@ export type NotesFormTypes = {
 };
 
 export type UserFormTypes = {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+  [key: string]: any; // Allow additional properties
 };

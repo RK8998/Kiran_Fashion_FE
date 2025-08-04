@@ -14,6 +14,7 @@ import AddEditProduct from '@/pages/Products/AddEditProduct';
 import ViewNote from '@/pages/Notes/ViewNote';
 import ViewUser from '@/pages/Users/ViewUser';
 import AddEditUser from '@/pages/Users/AddEditUser';
+import ChangePassword from '@/pages/Users/ChangePassword';
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: 'users/edit/:id',
         element: <AddEditUser />,
+      },
+      {
+        path: 'users/change-password/:id',
+        element: <ChangePassword />,
       },
       {
         path: 'products',

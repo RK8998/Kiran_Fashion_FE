@@ -161,7 +161,6 @@ const Notes: React.FC = () => {
     <AnimatedPage>
       <div className="p-4 space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          {/* Title */}
           <h1 className="text-2xl font-semibold text-gray-800">Notes</h1>
 
           {/* Right section: Search + Button */}
