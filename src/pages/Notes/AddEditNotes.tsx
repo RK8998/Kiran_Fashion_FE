@@ -12,6 +12,7 @@ import { AxiosError } from 'axios';
 import { mutationOnErrorHandler } from '@/helpers';
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { createNotesService, getNoteByIdService, updateNotesService } from '@/services/notes';
+import { MoveLeftIcon } from 'lucide-react';
 
 const AddEditNotes: React.FC = () => {
   const navigate = useNavigate();
@@ -103,9 +104,14 @@ const AddEditNotes: React.FC = () => {
       {/* <div className="max-w-2xl mx-auto p-4"> */}
       <div className="min-w-full mx-auto p-4">
         <Card className="p-6 shadow-sm rounded-2xl">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            {isEditMode ? 'Edit' : 'Create'} Note
-          </h2>
+          <div className="flex gap-2 justify-start items-center mb-6">
+            <MoveLeftIcon className="cursor-pointer" onClick={onBack} />
+
+            <h2 className="text-2xl font-semibold text-gray-800">
+              {isEditMode ? 'Edit' : 'Create'} Note
+            </h2>
+          </div>
+
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             {/* Title Field */}
             <div>
