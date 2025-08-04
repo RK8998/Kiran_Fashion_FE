@@ -7,3 +7,10 @@ export type NotesFormTypes = {
   title: string;
   description: string;
 };
+
+export type UserFormTypes = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+};
