@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button';
-import { Pencil, Trash2, PlusIcon, Eye, Rows } from 'lucide-react';
+import { Pencil, Trash2, PlusIcon, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -12,22 +12,22 @@ import {
   TableRow,
   TableCell,
   Pagination,
-  Tooltip,
   Spinner,
 } from '@heroui/react';
 import { AxiosError } from 'axios';
 
 import { AnimatedPage } from '@/components/AnimatedPage';
-import AppPagination from '@/components/AppPagination';
+// import AppPagination from '@/components/AppPagination';
 import AppButton from '@/components/AppButton';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 import { deleteNotesService, getNotesListService } from '@/services/notes';
 import { getFormattedDate, mutationOnErrorHandler } from '@/helpers';
 import useDebounce from '@/hooks/useDebounce';
-import EmptyState from '@/components/EmptyState';
+// import EmptyState from '@/components/EmptyState';
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 
 export const columns = [
+  { name: 'No', uid: 'no' },
   { name: 'TITLE', uid: 'title' },
   { name: 'DESCRIPTION', uid: 'description' },
   { name: 'DATE', uid: 'created_at' },
@@ -41,7 +41,7 @@ const Notes: React.FC = () => {
   const debounceSearch = useDebounce(search);
 
   const [page, setPage] = useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
   const onPageChange = (page: number) => setPage(page);
 
   const [deleteId, setDeleteId] = useState(null);
@@ -71,7 +71,7 @@ const Notes: React.FC = () => {
   });
 
   const { mutateAsync: onDeleteNote } = useMutation({
-    mutationKey: ['auth-login'],
+    mutationKey: ['delete-user'],
     mutationFn: async () => {
       const response = await deleteNotesService(deleteId);
 
@@ -99,10 +99,13 @@ const Notes: React.FC = () => {
     AppToast(onDeleteNote(), 'Delete Notes in progress');
   };
 
-  const renderCell = React.useCallback((record: any, columnKey: React.Key) => {
+  const renderCell = React.useCallback((record: any, columnKey: React.Key, rowIndex: number) => {
     const cellValue = record[columnKey as keyof any];
 
     switch (columnKey) {
+      case 'no':
+        return (page - 1) * rowsPerPage + rowIndex + 1;
+
       case 'created_at':
         return getFormattedDate(cellValue);
 
@@ -205,9 +208,9 @@ const Notes: React.FC = () => {
                 loadingState={loadingState}
               >
                 {notesList && notesList?.results?.length
-                  ? notesList?.results?.map((row: any) => (
+                  ? notesList?.results?.map((row: any, index: number) => (
                       <TableRow key={row.key}>
-                        {(columnKey) => <TableCell>{renderCell(row, columnKey)}</TableCell>}
+                        {(columnKey) => <TableCell>{renderCell(row, columnKey, index)}</TableCell>}
                       </TableRow>
                     ))
                   : []}

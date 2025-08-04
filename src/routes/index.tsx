@@ -12,6 +12,8 @@ import LoginPage from '@/pages/Auth/Login';
 import AddEditNotes from '@/pages/Notes/AddEditNotes';
 import AddEditProduct from '@/pages/Products/AddEditProduct';
 import ViewNote from '@/pages/Notes/ViewNote';
+import ViewUser from '@/pages/Users/ViewUser';
+import AddEditUser from '@/pages/Users/AddEditUser';
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +29,18 @@ export const router = createBrowserRouter([
       {
         path: 'users',
         element: <Users />,
+      },
+      {
+        path: 'users/:id',
+        element: <ViewUser />,
+      },
+      {
+        path: 'users/add',
+        element: <AddEditUser />,
+      },
+      {
+        path: 'users/edit/:id',
+        element: <AddEditUser />,
       },
       {
         path: 'products',
