@@ -43,6 +43,7 @@ const LoginPage = () => {
       navigate('/', { replace: true });
     },
     onError: (error) => {
+      console.log('🧑‍💻 || :46 || error:', error);
       mutationOnErrorHandler({ error: error as AxiosError });
     },
   });
