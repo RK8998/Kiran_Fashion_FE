@@ -179,6 +179,7 @@ const Notes: React.FC = () => {
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <Table
+              isHeaderSticky
               aria-label="Example table with dynamic content"
               bottomContent={
                 pages > 0 ? (
@@ -195,7 +196,6 @@ const Notes: React.FC = () => {
                   </div>
                 ) : null
               }
-              isHeaderSticky
               className="max-h-[400px] sm:max-h-[450px] md:max-h-[550px] lg:max-h-[650px] xl:max-h-[500px]"
             >
               <TableHeader>

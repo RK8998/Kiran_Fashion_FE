@@ -16,6 +16,8 @@ import ViewUser from '@/pages/Users/ViewUser';
 import AddEditUser from '@/pages/Users/AddEditUser';
 import ChangePassword from '@/pages/Users/ChangePassword';
 import ViewProduct from '@/pages/Products/ViewProduct';
+import AddEditSales from '@/pages/Sales/AddEditSales';
+import ViewSales from '@/pages/Sales/ViewSales';
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +66,18 @@ export const router = createBrowserRouter([
       {
         path: 'sales',
         element: <Sales />,
+      },
+      {
+        path: 'sales/:id',
+        element: <ViewSales />,
+      },
+      {
+        path: 'sales/add',
+        element: <AddEditSales />,
+      },
+      {
+        path: 'sales/edit/:id',
+        element: <AddEditSales />,
       },
       {
         path: 'notes',

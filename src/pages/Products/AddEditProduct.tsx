@@ -79,10 +79,10 @@ const AddEditProduct = () => {
     },
   });
 
-  const { data: userData } = useQuery({
+  const { data: productData } = useQuery({
     queryKey: ['user', 'data', productId],
     queryFn: async () => {
-      if (!productId) throw new Error('user is undefined');
+      if (!productId) throw new Error('product is undefined');
       const params = {};
       const response = await getProductByIdService(productId, params);
 
@@ -92,15 +92,15 @@ const AddEditProduct = () => {
   });
 
   useEffect(() => {
-    if (userData) {
-      const { name, remark } = userData;
+    if (productData) {
+      const { name, remark } = productData;
 
       reset({
         name,
         remark,
       });
     }
-  }, [userData]);
+  }, [productData]);
 
   return (
     <AnimatedPage>
