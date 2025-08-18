@@ -2,12 +2,11 @@ import React from 'react';
 import { Card } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { ArrowLeft } from 'lucide-react';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';
-import { getUserByIdService } from '@/services/user';
 import { getProductByIdService } from '@/services/products';
-import { ArrowLeft } from 'lucide-react';
 
 const ViewProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -26,6 +25,12 @@ const ViewProduct: React.FC = () => {
     },
     enabled: Boolean(productsId),
   });
+
+  const getProfit = (base: number, sell: number) => {
+    const calculation = sell - base;
+
+    return calculation > 0 ? `${calculation} Profit` : `${calculation} Loss`;
+  };
 
   return (
     <AnimatedPage>
@@ -50,7 +55,30 @@ const ViewProduct: React.FC = () => {
               </div>
             </div>
           </div>
-          {/* Submit Button */}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Purchase Amount</p>
+              <div className="text-lg text-gray-800 mt-1">{productsData?.base_amount || 0}</div>
+            </div>
+
+            <div>
+              <p className="text-sm font-medium text-gray-500">Sell Amount</p>
+              <div className="text-lg text-gray-800 mt-1 whitespace-pre-wrap">
+                {productsData?.sell_amount || '-'}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <p className="text-sm font-medium text-gray-500">Earnings Per Item</p>
+              <div className="text-lg text-gray-800 mt-1">
+                {getProfit(productsData?.base_amount, productsData?.sell_amount)}
+              </div>
+            </div>
+          </div>
+
           <div className="text-right flex gap-2 justify-end">
             <AppButton color="secondary" title="Back" type="button" onClick={onBack} />
           </div>

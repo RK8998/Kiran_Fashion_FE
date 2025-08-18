@@ -27,6 +27,8 @@ import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 export const columns = [
   { name: 'NO', uid: 'no' },
   { name: 'NAME', uid: 'name' },
+  { name: 'PURCHASE AMOUNT', uid: 'base_amount' },
+  { name: 'SELL AMOUNT', uid: 'sell_amount' },
   { name: 'REMARK', uid: 'remark' },
   { name: 'ACTIONS', uid: 'actions' },
 ];
@@ -106,6 +108,9 @@ const Products: React.FC = () => {
 
         case 'created_at':
           return getFormattedDate(cellValue);
+
+        case 'remark':
+          return cellValue || '-';
 
         case 'actions':
           return (

@@ -18,6 +18,8 @@ export type UserFormTypes = {
 
 export type ProductFormTypes = {
   name: string;
+  base_amount: number;
+  sell_amount: number;
   remark: string;
 };
 

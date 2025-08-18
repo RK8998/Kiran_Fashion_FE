@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react';
-import { Input, Textarea, Card } from '@heroui/react'; // adjust imports if needed
+import { Input, Card } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
+import { ArrowLeft } from 'lucide-react';
+import { AxiosError } from 'axios';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';
 import { ProductFormTypes } from '@/constants/formTypes';
-import { Controller, useForm } from 'react-hook-form';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   createProductsService,
   getProductByIdService,
   updateProductsService,
 } from '@/services/products';
-import { AxiosError } from 'axios';
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { mutationOnErrorHandler } from '@/helpers';
-import { ArrowLeft } from 'lucide-react';
 
 const AddEditProduct = () => {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const AddEditProduct = () => {
     },
     onSuccess: (response) => {
       displaySuccessToast(response?.message);
-      navigate('/users');
+      navigate('/products');
     },
     onError: (error) => {
       mutationOnErrorHandler({ error: error as AxiosError });
@@ -72,12 +72,17 @@ const AddEditProduct = () => {
     control,
     formState: { errors },
     reset,
+    watch,
   } = useForm<ProductFormTypes>({
     defaultValues: {
       name: '',
+      base_amount: 0,
+      sell_amount: 0,
       remark: '',
     },
   });
+
+  const baseAmount = watch('base_amount'); // watch base_amount value
 
   const { data: productData } = useQuery({
     queryKey: ['user', 'data', productId],
@@ -93,11 +98,13 @@ const AddEditProduct = () => {
 
   useEffect(() => {
     if (productData) {
-      const { name, remark } = productData;
+      const { name, remark, base_amount, sell_amount } = productData;
 
       reset({
         name,
         remark,
+        base_amount,
+        sell_amount,
       });
     }
   }, [productData]);
@@ -137,6 +144,60 @@ const AddEditProduct = () => {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
+                Purchase Amount
+              </label>
+              <Controller
+                control={control}
+                name="base_amount"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    errorMessage={errors.base_amount && errors.base_amount.message}
+                    id="base_amount"
+                    isInvalid={!!errors.base_amount}
+                    placeholder="Enter base amount"
+                    radius="lg"
+                    type="number"
+                    value={field.value?.toString() ?? ''} // Convert number → string
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                )}
+                rules={{
+                  required: 'Base Amount is required',
+                }}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
+                Sell Amount
+              </label>
+              <Controller
+                control={control}
+                name="sell_amount"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    errorMessage={errors.sell_amount && errors.sell_amount.message}
+                    id="sell_amount"
+                    isInvalid={!!errors.sell_amount}
+                    placeholder="Enter sell amount"
+                    radius="lg"
+                    type="number"
+                    value={field.value?.toString() ?? ''} // Convert number → string
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                )}
+                rules={{
+                  required: 'Sell Amount is required',
+                  validate: (value) =>
+                    value > baseAmount || 'Sell Amount should be greater than Base Amount',
+                }}
+              />
+            </div>
+
             {/* Remark Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
@@ -156,9 +217,9 @@ const AddEditProduct = () => {
                     type="text"
                   />
                 )}
-                rules={{
-                  required: 'Remark is required',
-                }}
+                // rules={{
+                //   required: 'Remark is required',
+                // }}
               />
             </div>
 
@@ -167,6 +228,7 @@ const AddEditProduct = () => {
               <AppButton color="secondary" title="Back" type="button" onClick={onBack} />
               <AppButton
                 color="primary"
+                isLoading={isPendingCreate || isPendingUpdate}
                 title={isEditMode ? 'Update' : 'Save Product'}
                 type="submit"
               />
