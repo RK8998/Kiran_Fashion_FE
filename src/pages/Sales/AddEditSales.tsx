@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Input, Select, Card, SelectItem, Textarea } from '@heroui/react'; // adjust imports if needed
+import { Input, Card, Textarea, RadioGroup, Radio } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { ArrowLeft } from 'lucide-react';
@@ -73,6 +73,7 @@ const AddEditSales = () => {
         product_id: data.product_id,
         base_amount: +data.base_amount,
         sell_amount: +data.sell_amount,
+        discount: +data.discount,
         remark: data.remark,
       };
 
@@ -86,6 +87,7 @@ const AddEditSales = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
     watch,
     reset,
   } = useForm<SalesFormTypes>({
@@ -93,6 +95,7 @@ const AddEditSales = () => {
       product_id: null,
       base_amount: 0,
       sell_amount: 0,
+      discount: 0,
       remark: '',
     },
   });
@@ -144,10 +147,17 @@ const AddEditSales = () => {
     }
   }, [salesData]);
 
+  const onChangeProducts = (productId: string) => {
+    const selectedProduct = productsList?.results?.find((item: any) => item?._id === productId);
+
+    setValue('base_amount', selectedProduct?.base_amount);
+    setValue('sell_amount', selectedProduct?.sell_amount);
+  };
+
   return (
     <AnimatedPage>
       <div className="min-w-full mx-auto p-4">
-        <Card className="p-6 shadow-lg rounded-2xl">
+        <Card className="p-6 shadow-sm rounded-2xl">
           <div className="flex gap-2 justify-start items-center mb-6">
             <ArrowLeft className="cursor-pointer" onClick={onBack} />
 
@@ -158,10 +168,10 @@ const AddEditSales = () => {
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             {/* Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
+              {/* <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
                 Product
-              </label>
-              <Controller
+              </label> */}
+              {/* <Controller
                 control={control}
                 name="product_id"
                 render={({ field }) => (
@@ -175,8 +185,13 @@ const AddEditSales = () => {
                     placeholder="Select product"
                     radius="lg"
                     selectedKeys={field.value ? [field.value] : []} // match key as string
+                    onChange={(e) => {
+                      field.onChange(e);
+                      onChangeProducts(e.target.value);
+                    }}
                     onSelectionChange={(keys) => {
                       const selected = Array.from(keys)[0] as string;
+
                       field.onChange(selected);
                     }}
                   >
@@ -186,7 +201,50 @@ const AddEditSales = () => {
                   </Select>
                 )}
                 rules={{ required: 'Product is required' }}
+              /> */}
+
+              <Controller
+                control={control}
+                name="product_id"
+                render={({ field }) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {productOptions.map((item: { key: string; label: string }) => {
+                      const isSelected = field.value === item.key;
+
+                      return (
+                        <button
+                          key={item.key}
+                          className={[
+                            'cursor-pointer rounded-xl border-2 p-4 text-center transition-all duration-200',
+                            'hover:shadow-sm hover:border-blue-400',
+                            isSelected
+                              ? 'border-blue-500 bg-blue-50 shadow-lg'
+                              : 'border-gray-200 bg-white',
+                          ].join(' ')}
+                          type="button"
+                          onClick={() => {
+                            field.onChange(item.key);
+                            onChangeProducts(item.key);
+                          }}
+                        >
+                          <p
+                            className={[
+                              'font-medium text-sm md:text-lg',
+                              isSelected ? 'text-blue-600' : 'text-gray-700',
+                            ].join(' ')}
+                          >
+                            {item.label}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                rules={{ required: 'Product is required' }}
               />
+              {errors.product_id && (
+                <p className="text-red-500 text-sm mt-2">{errors.product_id.message}</p>
+              )}
             </div>
 
             <div>
@@ -243,6 +301,34 @@ const AddEditSales = () => {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
+                Discount
+              </label>
+              <Controller
+                control={control}
+                name="discount"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    errorMessage={errors.discount && errors.discount.message}
+                    id="discount"
+                    isInvalid={!!errors.discount}
+                    placeholder="Enter discount"
+                    radius="lg"
+                    type="number"
+                    value={field.value?.toString() ?? ''} // Convert number → string
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                )}
+                // rules={{
+                //   required: 'Sell Amount is required',
+                //   validate: (value) =>
+                //     value > baseAmount || 'Sell Amount should be greater than Base Amount',
+                // }}
+              />
+            </div>
+
             {/* Remark Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
@@ -271,7 +357,7 @@ const AddEditSales = () => {
             {/* Submit Button */}
             <div className="text-right flex gap-2 justify-end">
               {/* <AppButton color="secondary" title="Back" type="button" onClick={onBack} /> */}
-              {!isEditMode && (
+              {/* {!isEditMode && (
                 <AppButton
                   color="success"
                   isLoading={isPendingCreate || isPendingUpdate}
@@ -282,8 +368,9 @@ const AddEditSales = () => {
                     // handleSubmit(onSubmit)();
                   }}
                 />
-              )}
+              )} */}
               <AppButton
+                className="w-full sm:w-auto"
                 color="primary"
                 isLoading={isPendingCreate || isPendingUpdate}
                 title={isEditMode ? 'Update' : 'Save Sale'}

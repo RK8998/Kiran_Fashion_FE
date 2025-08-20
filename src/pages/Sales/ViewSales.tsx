@@ -55,21 +55,26 @@ const ViewSales: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
               <p className="text-sm font-medium text-gray-500">Base Amount</p>
-              <div className="text-lg text-gray-800 mt-1">{salesData?.base_amount || '-'}</div>
+              <div className="text-lg text-gray-800 mt-1">₹{salesData?.base_amount || '-'}</div>
             </div>
 
             <div>
               <p className="text-sm font-medium text-gray-500">Sell Amount</p>
               <div className="text-lg text-gray-800 mt-1 whitespace-pre-wrap">
-                {salesData?.sell_amount}
+                ₹{salesData?.sell_amount}
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
+              <p className="text-sm font-medium text-gray-500">Discount</p>
+              <div className="text-lg text-gray-800 mt-1">₹{salesData?.discount || '-'}</div>
+            </div>
+
+            <div>
               <p className="text-sm font-medium text-gray-500">Profit</p>
-              <div className="text-lg text-gray-800 mt-1">{salesData?.profit || '-'}</div>
+              <div className="text-lg text-gray-800 mt-1">₹{salesData?.profit || '-'}</div>
             </div>
 
             <div>

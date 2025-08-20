@@ -32,6 +32,7 @@ export const columns = [
   { name: 'PRODUCT', uid: 'product_id' },
   { name: 'BASE AMOUNT', uid: 'base_amount' },
   { name: 'SELL AMOUNT', uid: 'sell_amount' },
+  { name: 'DISCOUNT', uid: 'discount' },
   { name: 'PROFIT/LOSS', uid: 'profit' },
   { name: 'DATE', uid: 'created_at' },
   { name: 'ACTIONS', uid: 'actions' },
@@ -135,7 +136,7 @@ const Sales: React.FC = () => {
               size="md"
               variant="solid"
             >
-              {cellValue}
+              ₹{cellValue}
             </Chip>
           );
 
