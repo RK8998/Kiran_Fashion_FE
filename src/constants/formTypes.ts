@@ -18,5 +18,15 @@ export type UserFormTypes = {
 
 export type ProductFormTypes = {
   name: string;
+  base_amount: number;
+  sell_amount: number;
+  remark: string;
+};
+
+export type SalesFormTypes = {
+  product_id: any; // Assuming product_id can be a number or string
+  base_amount: number; // Assuming base_amount is a string for currency input
+  sell_amount: number;
+  discount: number;
   remark: string;
 };

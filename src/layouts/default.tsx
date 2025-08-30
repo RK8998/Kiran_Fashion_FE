@@ -1,11 +1,17 @@
-import { useState, KeyboardEvent } from 'react';
+import { useState, KeyboardEvent, useContext, useMemo } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Avatar } from '@heroui/react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import clsx from 'clsx';
 
 import { navItems } from '@/constants';
+import { GlobalContext } from '@/context/GlobalContext';
+import { AUTH_TOKEN, localStorageHandler } from '@/helpers/storage';
+// import { GlobalContext } from '@/context/GlobalContext';
+// import { useQuery } from '@tanstack/react-query';
+// import { getLoggedInUserService } from '@/services/user';
+// import FullPageLoader from '@/components/FullPageLoader';
 
 /** Accent color used for active bar + brand border */
 const ACCENT = 'border-primary-400';
@@ -37,6 +43,8 @@ export default function DefaultLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { user } = useContext(GlobalContext);
 
   const activePath = navItems.find((n) => location.pathname === n.path)?.path ?? '/';
 
@@ -87,6 +95,17 @@ export default function DefaultLayout() {
     );
   };
 
+  const filteredNavItems = useMemo(() => {
+    return navItems.filter((item) => {
+      if (item.allowedRoles.includes(user?.role)) return item;
+    });
+  }, [user]);
+
+  const handleLogout = () => {
+    localStorageHandler('REMOVE', AUTH_TOKEN);
+    window.location.href = '/login';
+  };
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-gray-50 text-gray-900">
       {/* Desktop Sidebar */}
@@ -105,10 +124,21 @@ export default function DefaultLayout() {
         </div>
         {/* Nav */}
         <nav className="flex-1 flex flex-col gap-1">
-          {navItems.map((n) => (
+          {filteredNavItems.map((n) => (
             <NavBtn key={n.path} Icon={n.icon} label={n.label} path={n.path} />
           ))}
         </nav>
+
+        {/* Logout Button */}
+        <div className="mt-4">
+          <button
+            className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 border border-primary-200 rounded-lg hover:bg-primary-50 hover:border-primary-300 transition-colors cursor-pointer"
+            onClick={handleLogout} // your logout function
+          >
+            <LogOut className="w-5 h-5" />
+            Logout
+          </button>
+        </div>
       </aside>
 
       {/* Mobile Sidebar Drawer + Overlay */}
@@ -147,6 +177,16 @@ export default function DefaultLayout() {
                   <NavBtn key={n.path} isMobile Icon={n.icon} label={n.label} path={n.path} />
                 ))}
               </nav>
+
+              <div className="mt-4">
+                <button
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 border border-primary-200 rounded-lg hover:bg-primary-50 hover:border-primary-300 transition-colors cursor-pointer"
+                  onClick={handleLogout} // your logout function
+                >
+                  <LogOut className="w-5 h-5" />
+                  Logout
+                </button>
+              </div>
             </motion.aside>
           </div>
         )}

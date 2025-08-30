@@ -2,35 +2,31 @@ import React from 'react';
 import { Card } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';
+import { getUserByIdService } from '@/services/user';
 import { getProductByIdService } from '@/services/products';
+import { ArrowLeft } from 'lucide-react';
+import { getSalesByIdService } from '@/services/sales';
 
-const ViewProduct: React.FC = () => {
+const ViewSales: React.FC = () => {
   const navigate = useNavigate();
-  const { id: productsId } = useParams();
+  const { id: salesId } = useParams();
 
   const onBack = () => navigate(-1);
 
-  const { data: productsData } = useQuery({
-    queryKey: ['product', 'data', productsId],
+  const { data: salesData } = useQuery({
+    queryKey: ['sales', 'data', salesId],
     queryFn: async () => {
-      if (!productsId) throw new Error('productId is undefined');
+      if (!salesId) throw new Error('salesId is undefined');
       const params = {};
-      const response = await getProductByIdService(productsId, params);
+      const response = await getSalesByIdService(salesId, params);
 
       return response?.data?.data;
     },
-    enabled: Boolean(productsId),
+    enabled: Boolean(salesId),
   });
-
-  const getProfit = (base: number, sell: number) => {
-    const calculation = sell - base;
-
-    return calculation > 0 ? `${calculation} Profit` : `${calculation} Loss`;
-  };
 
   return (
     <AnimatedPage>
@@ -39,46 +35,56 @@ const ViewProduct: React.FC = () => {
           <div className="flex gap-2 justify-start items-center mb-6">
             <ArrowLeft className="cursor-pointer" onClick={onBack} />
 
-            <h2 className="text-2xl font-semibold text-gray-800">View Product</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">View Sales</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
-              <p className="text-sm font-medium text-gray-500">Name</p>
-              <div className="text-lg text-gray-800 mt-1">{productsData?.name || '-'}</div>
+              <p className="text-sm font-medium text-gray-500">Product</p>
+              <div className="text-lg text-gray-800 mt-1">{salesData?.product_id?.name || '-'}</div>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-500">Remark</p>
+              <p className="text-sm font-medium text-gray-500">Sale by</p>
               <div className="text-lg text-gray-800 mt-1 whitespace-pre-wrap">
-                {productsData?.remark || '-'}
+                {salesData?.user_id?.name || '-'}
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
-              <p className="text-sm font-medium text-gray-500">Purchase Amount</p>
-              <div className="text-lg text-gray-800 mt-1">{productsData?.base_amount || 0}</div>
+              <p className="text-sm font-medium text-gray-500">Base Amount</p>
+              <div className="text-lg text-gray-800 mt-1">₹{salesData?.base_amount || '-'}</div>
             </div>
 
             <div>
               <p className="text-sm font-medium text-gray-500">Sell Amount</p>
               <div className="text-lg text-gray-800 mt-1 whitespace-pre-wrap">
-                {productsData?.sell_amount || '-'}
+                ₹{salesData?.sell_amount}
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
-              <p className="text-sm font-medium text-gray-500">Earnings Per Item</p>
-              <div className="text-lg text-gray-800 mt-1">
-                {getProfit(productsData?.base_amount, productsData?.sell_amount)}
+              <p className="text-sm font-medium text-gray-500">Discount</p>
+              <div className="text-lg text-gray-800 mt-1">₹{salesData?.discount || '-'}</div>
+            </div>
+
+            <div>
+              <p className="text-sm font-medium text-gray-500">Profit</p>
+              <div className="text-lg text-gray-800 mt-1">₹{salesData?.profit || '-'}</div>
+            </div>
+
+            <div>
+              <p className="text-sm font-medium text-gray-500">Remark</p>
+              <div className="text-lg text-gray-800 mt-1 whitespace-pre-wrap">
+                {salesData?.remark || '-'}
               </div>
             </div>
           </div>
-
+          {/* Submit Button */}
           <div className="text-right flex gap-2 justify-end">
             <AppButton color="secondary" title="Back" type="button" onClick={onBack} />
           </div>
@@ -88,4 +94,4 @@ const ViewProduct: React.FC = () => {
   );
 };
 
-export default ViewProduct;
+export default ViewSales;

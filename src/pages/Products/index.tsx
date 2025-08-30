@@ -27,6 +27,8 @@ import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
 export const columns = [
   { name: 'NO', uid: 'no' },
   { name: 'NAME', uid: 'name' },
+  { name: 'PURCHASE AMOUNT', uid: 'base_amount' },
+  { name: 'SELL AMOUNT', uid: 'sell_amount' },
   { name: 'REMARK', uid: 'remark' },
   { name: 'ACTIONS', uid: 'actions' },
 ];
@@ -67,7 +69,7 @@ const Products: React.FC = () => {
     placeholderData: keepPreviousData,
   });
 
-  const { mutateAsync: onDeleteUser } = useMutation({
+  const { mutateAsync: onDeleteProduct } = useMutation({
     mutationKey: ['delete-product'],
     mutationFn: async () => {
       const response = await deleteProductsService(deleteId);
@@ -93,7 +95,7 @@ const Products: React.FC = () => {
   };
 
   const handleDelete = () => {
-    AppToast(onDeleteUser(), 'Delete user in progress');
+    AppToast(onDeleteProduct(), 'Delete user in progress');
   };
 
   const renderCell = React.useCallback(
@@ -106,6 +108,9 @@ const Products: React.FC = () => {
 
         case 'created_at':
           return getFormattedDate(cellValue);
+
+        case 'remark':
+          return cellValue || '-';
 
         case 'actions':
           return (
@@ -197,6 +202,7 @@ const Products: React.FC = () => {
                   </div>
                 ) : null
               }
+              className="max-h-[400px] sm:max-h-[450px] md:max-h-[550px] lg:max-h-[650px] xl:max-h-[500px]"
             >
               <TableHeader>
                 {columns.map((column) => (

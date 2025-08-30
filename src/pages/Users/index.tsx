@@ -255,6 +255,7 @@ const Users: React.FC = () => {
                   </div>
                 ) : null
               }
+              className="max-h-[400px] sm:max-h-[450px] md:max-h-[550px] lg:max-h-[650px] xl:max-h-[500px]"
             >
               <TableHeader>
                 {columns.map((column) => (
