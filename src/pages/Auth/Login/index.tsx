@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 
 import AppButton from '@/components/AppButton';
 import LoginImage from '@/assets/images/login.svg';
@@ -12,11 +13,13 @@ import { mutationOnErrorHandler } from '@/helpers';
 import { AUTH_TOKEN, localStorageHandler } from '@/helpers/storage';
 import { AppToast } from '@/helpers/toast';
 import { LoginFormTypes } from '@/constants/formTypes';
+import { GlobalContext } from '@/context/GlobalContext';
 
 const APP_NAME = import.meta.env.VITE_APP_NAME;
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { saveLoggedInUser } = useContext(GlobalContext);
 
   const {
     handleSubmit,
@@ -38,12 +41,14 @@ const LoginPage = () => {
     },
     onSuccess: (response) => {
       const authToken = response?.data?.data?.token;
+      const userData = response?.data?.data?.user;
+
+      saveLoggedInUser(userData);
 
       localStorageHandler('SET', AUTH_TOKEN, authToken);
       navigate('/', { replace: true });
     },
     onError: (error) => {
-      console.log('🧑‍💻 || :46 || error:', error);
       mutationOnErrorHandler({ error: error as AxiosError });
     },
   });
@@ -66,7 +71,7 @@ const LoginPage = () => {
 
         {/* Right - Login Card */}
         <div className="w-full lg:w-1/2 p-8 flex items-center justify-center">
-          <Card className="w-full max-w-md border border-gray-200 shadow-xl rounded-2xl">
+          <Card className="w-full max-w-md border border-gray-200 shadow-md rounded-2xl">
             <CardHeader className="text-center">
               <h2 className="text-2xl font-bold text-gray-800">Kiran Fashion</h2>
               {/* <p className="text-sm text-gray-500 mt-1">Please login to your account</p> */}

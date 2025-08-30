@@ -4,9 +4,9 @@ import { Unauthorized } from '../Auth/Unauthorized';
 import { PageNotFound } from '../Auth/PageNotFound';
 
 import { AnimatedPage } from '@/components/AnimatedPage';
-
 import ErrorImageSlot from '@/components/ErrorImageSlot';
-import ErrorImage from '@/assets/images/error.svg';
+// import ErrorImage from '@/assets/images/error.svg';
+import ErrorImage from '@/assets/images/error.png';
 import AppButton from '@/components/AppButton';
 
 export function RouterErrorElement() {

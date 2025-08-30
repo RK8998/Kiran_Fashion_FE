@@ -21,3 +21,7 @@ export const deleteUsersService = (id: string | null) => {
 export const updateUsersService = (id: string, data: UserFormTypes) => {
   return Axios.put(`/users/${id}`, data);
 };
+
+export const getLoggedInUserService = (params: { [key: string]: any }) => {
+  return Axios.get('/auth/me', { params });
+};

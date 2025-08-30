@@ -1,11 +1,15 @@
 import { Home, Users, Package, BarChart3, StickyNote } from 'lucide-react';
 
-import { NavItem } from '@/types/layout';
+import { NavItem, Roles } from '@/types/layout';
 
+export const ROLES: Roles = {
+  admin: 'admin',
+  user: 'user',
+};
 export const navItems: NavItem[] = [
-  { label: 'Home', path: '/', icon: Home },
-  { label: 'Users', path: '/users', icon: Users },
-  { label: 'Products', path: '/products', icon: Package },
-  { label: 'Sales', path: '/sales', icon: BarChart3 },
-  { label: 'Notes', path: '/notes', icon: StickyNote },
+  { label: 'Home', path: '/', icon: Home, allowedRoles: [ROLES.admin, ROLES.user] },
+  { label: 'Users', path: '/users', icon: Users, allowedRoles: [ROLES.admin] },
+  { label: 'Products', path: '/products', icon: Package, allowedRoles: [ROLES.admin, ROLES.user] },
+  { label: 'Sales', path: '/sales', icon: BarChart3, allowedRoles: [ROLES.admin, ROLES.user] },
+  { label: 'Notes', path: '/notes', icon: StickyNote, allowedRoles: [ROLES.admin, ROLES.user] },
 ];
