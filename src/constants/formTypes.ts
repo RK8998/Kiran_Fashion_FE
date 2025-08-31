@@ -30,3 +30,13 @@ export type SalesFormTypes = {
   discount: number;
   remark: string;
 };
+
+export type ChangePasswordFormTypes = {
+  new_password?: string;
+  confirm_password?: string;
+};
+
+export type ApiChangePasswordFormTypes = {
+  password?: string;
+  user_id?: string;
+};

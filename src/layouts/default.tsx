@@ -1,17 +1,13 @@
 import { useState, KeyboardEvent, useContext, useMemo } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Avatar } from '@heroui/react';
 import { Menu, X, LogOut } from 'lucide-react';
 import clsx from 'clsx';
 
 import { navItems } from '@/constants';
 import { GlobalContext } from '@/context/GlobalContext';
 import { AUTH_TOKEN, localStorageHandler } from '@/helpers/storage';
-// import { GlobalContext } from '@/context/GlobalContext';
-// import { useQuery } from '@tanstack/react-query';
-// import { getLoggedInUserService } from '@/services/user';
-// import FullPageLoader from '@/components/FullPageLoader';
+import HeaderProfileMenu from '@/components/HeaderProfileMenu';
 
 /** Accent color used for active bar + brand border */
 const ACCENT = 'border-primary-400';
@@ -193,7 +189,7 @@ export default function DefaultLayout() {
       </AnimatePresence>
 
       {/* Main Column */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-scroll">
         {/* Header */}
         <header className="app-header h-16 flex items-center justify-between px-4 md:px-8 bg-white shadow-sm">
           {/* Mobile hamburger */}
@@ -209,13 +205,7 @@ export default function DefaultLayout() {
           {/* Title */}
           <h1 className="text-lg font-semibold truncate">{activeLabel}</h1>
 
-          {/* Avatar */}
-          <Avatar
-            className="cursor-pointer border-2 border-primary-400"
-            name="User"
-            size="sm"
-            src="https://i.pravatar.cc/100?img=8"
-          />
+          <HeaderProfileMenu key={'header_profile-avatar'} user={user!} />
         </header>
 
         {/* Page Content Wrapper */}
