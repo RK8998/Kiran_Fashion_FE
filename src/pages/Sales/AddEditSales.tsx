@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Input, Card, Textarea, RadioGroup, Radio } from '@heroui/react'; // adjust imports if needed
+import { Input, Card, Textarea } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { ArrowLeft } from 'lucide-react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-
 import { AxiosError } from 'axios';
 
 import AppButton from '@/components/AppButton';
@@ -20,7 +19,7 @@ const ACTIONS = {
   save_and_add_another: 'save_and_add_another',
 };
 
-const AddEditSales = () => {
+const AddEditSales: React.FC = () => {
   const navigate = useNavigate();
   const { id: salesId } = useParams();
   const [action, setAction] = useState<null | string>(null);
@@ -102,7 +101,7 @@ const AddEditSales = () => {
 
   const baseAmount = watch('base_amount'); // watch base_amount value
 
-  const { data: productsList, isLoading: isLoadingProducts } = useQuery({
+  const { data: productsList } = useQuery({
     queryKey: ['products', 'list'],
     queryFn: async () => {
       const response = await getProductsListService({});
@@ -242,8 +241,8 @@ const AddEditSales = () => {
                 )}
                 rules={{ required: 'Product is required' }}
               />
-              {errors.product_id && (
-                <p className="text-red-500 text-sm mt-2">{errors.product_id.message}</p>
+              {errors.product_id?.message && (
+                <p className="text-red-500 text-sm mt-2">{String(errors.product_id.message)}</p>
               )}
             </div>
 

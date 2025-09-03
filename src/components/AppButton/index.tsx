@@ -27,10 +27,15 @@ const AppButton: React.FC<AppButtonProps> = ({
   isDisabled = false,
   isLoading = false,
   fullWidth = false,
+  className = '',
   ...props
 }) => {
   return (
     <Button
+      className={`relative font-medium transition-all duration-300
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500
+                  active:scale-95
+                  ${className}`}
       color={color}
       endContent={endIcon}
       fullWidth={fullWidth}

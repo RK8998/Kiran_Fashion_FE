@@ -1,4 +1,9 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, {
+  // AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig,
+} from 'axios';
 
 import { localStorageHandler, AUTH_TOKEN } from '@/helpers/storage';
 
@@ -15,7 +20,7 @@ export const Axios = axios.create({
 
 // Add request interceptor
 Axios.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const authToken = localStorageHandler('GET', AUTH_TOKEN);
 
     if (config.headers) {

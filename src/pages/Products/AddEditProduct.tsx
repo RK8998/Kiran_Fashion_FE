@@ -17,7 +17,7 @@ import {
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { mutationOnErrorHandler } from '@/helpers';
 
-const AddEditProduct = () => {
+const AddEditProduct: React.FC = () => {
   const navigate = useNavigate();
   const { id: productId } = useParams();
 

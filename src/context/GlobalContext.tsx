@@ -1,10 +1,18 @@
 import React, { createContext, useState } from 'react';
 
-export const GlobalContext = createContext({
+type GlobalContextType = {
+  user: null | any;
+  saveLoggedInUser: (data: any) => void;
+};
+
+// export const GlobalContext = createContext({
+//   user: null,
+//   saveLoggedInUser: (data: any) => void,
+// });
+
+export const GlobalContext = createContext<GlobalContextType>({
   user: null,
-  saveLoggedInUser: (data: any) => {
-    return;
-  },
+  saveLoggedInUser: () => {},
 });
 
 const GlobalContextProvider = (props: React.PropsWithChildren) => {

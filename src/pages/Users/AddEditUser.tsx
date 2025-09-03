@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { BackpackIcon, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';

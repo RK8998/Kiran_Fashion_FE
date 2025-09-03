@@ -1,6 +1,6 @@
 import { Axios } from './webRequest';
 
-import { UserFormTypes } from '@/constants/formTypes';
+import { ApiChangePasswordFormTypes, UserFormTypes } from '@/constants/formTypes';
 
 export const getUsersListService = (params: { [key: string]: any }) => {
   return Axios.get('/users', { params });
@@ -24,4 +24,8 @@ export const updateUsersService = (id: string, data: UserFormTypes) => {
 
 export const getLoggedInUserService = (params: { [key: string]: any }) => {
   return Axios.get('/auth/me', { params });
+};
+
+export const changePasswordService = (data: ApiChangePasswordFormTypes) => {
+  return Axios.put(`/users/change-password`, data);
 };
