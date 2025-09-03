@@ -5,5 +5,8 @@ import { LoginFormTypes } from '@/constants/formTypes';
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 export const loginService = (data: LoginFormTypes): Promise<AxiosResponse<any, any>> => {
+  console.log({ baseURL });
+  console.log(`${baseURL}/auth/login`);
+
   return axios.post(`${baseURL}/auth/login`, data);
 };

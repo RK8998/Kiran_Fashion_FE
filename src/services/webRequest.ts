@@ -4,6 +4,7 @@ import { localStorageHandler, AUTH_TOKEN } from '@/helpers/storage';
 
 const authToken = localStorageHandler('GET', AUTH_TOKEN);
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL;
+console.log('🧑‍💻 || :7 || baseURL:', baseURL);
 
 export const Axios = axios.create({
   baseURL,
