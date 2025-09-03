@@ -2,12 +2,10 @@ import React from 'react';
 import { Card } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { ArrowLeft } from 'lucide-react';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';
-import { getUserByIdService } from '@/services/user';
-import { getProductByIdService } from '@/services/products';
-import { ArrowLeft } from 'lucide-react';
 import { getSalesByIdService } from '@/services/sales';
 
 const ViewSales: React.FC = () => {

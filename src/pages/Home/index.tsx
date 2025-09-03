@@ -26,7 +26,7 @@ const Home: React.FC = () => {
     end: today(getLocalTimeZone()), // default end = today
   });
 
-  const { data: dashboardData, isLoading } = useQuery({
+  const { data: dashboardData } = useQuery({
     queryKey: ['dashboard', 'data', { selectedRange }],
     queryFn: async () => {
       const params = {

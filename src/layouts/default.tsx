@@ -51,18 +51,15 @@ export default function DefaultLayout() {
     setMobileOpen(false);
   };
 
-  /** NavItem button */
-  const NavBtn = ({
-    label,
-    path,
-    Icon,
-    isMobile = false,
-  }: {
+  type PropsTypes = {
     label: string;
     path: string;
     Icon: any;
     isMobile?: boolean;
-  }) => {
+  };
+
+  /** NavItem button */
+  const NavBtn = ({ label, path, Icon }: PropsTypes) => {
     const active = path === activePath;
 
     return (
