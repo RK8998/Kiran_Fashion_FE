@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react';
 import { Input, Textarea, Card } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
-
 import { Controller, useForm } from 'react-hook-form';
-import AppButton from '@/components/AppButton';
-import { AnimatedPage } from '@/components/AnimatedPage';
-
-import { NotesFormTypes } from '@/constants/formTypes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+
+import AppButton from '@/components/AppButton';
+import { AnimatedPage } from '@/components/AnimatedPage';
+import { NotesFormTypes } from '@/constants/formTypes';
 import { mutationOnErrorHandler } from '@/helpers';
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { createNotesService, getNoteByIdService, updateNotesService } from '@/services/notes';
-import { ArrowLeft } from 'lucide-react';
+// import { ArrowLeft } from 'lucide-react';
 
 const AddEditNotes: React.FC = () => {
   const navigate = useNavigate();

@@ -2,9 +2,10 @@ import { Input } from '@heroui/input';
 import { Card } from '@heroui/react';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { ArrowLeft, Eye, EyeClosed } from 'lucide-react';
+import { Eye, EyeClosed } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
 
 import { mutationOnErrorHandler } from '@/helpers';
 import { changePasswordService } from '@/services/user';
@@ -12,7 +13,6 @@ import AppButton from '@/components/AppButton';
 import { ApiChangePasswordFormTypes, ChangePasswordFormTypes } from '@/constants/formTypes';
 import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { AnimatedPage } from '@/components/AnimatedPage';
-import { useState } from 'react';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
