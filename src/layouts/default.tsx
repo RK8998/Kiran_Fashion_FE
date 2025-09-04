@@ -35,6 +35,61 @@ function Overlay({ onClose }: { onClose: () => void }) {
   );
 }
 
+type PropsTypes = {
+  label: string;
+  path: string;
+  Icon: any;
+  isMobile?: boolean;
+  activeMenu: string | null;
+  // activePath: string;
+  onNavigate: (path: string) => void;
+  onClickMenu: (menu: any) => void;
+};
+
+/** NavItem button */
+const NavBtn = ({
+  isMobile,
+  label,
+  path,
+  Icon,
+  activeMenu,
+  // activePath,
+  onNavigate,
+  onClickMenu,
+}: PropsTypes) => {
+  // const active = path === activePath;
+  const active = label === activeMenu;
+
+  return (
+    <button
+      className={clsx(
+        'cursor-pointer relative w-full text-left  rounded-lg transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary',
+        'flex items-center gap-2', // Align icon & text
+        active
+          ? `${ACCENT_BG} ${ACCENT_TEXT} font-medium shadow-sm`
+          : 'hover:bg-gray-100 text-gray-900',
+        isMobile ? 'p-4' : 'px-4 py-2'
+      )}
+      type="button"
+      onClick={() => {
+        onClickMenu(label);
+        onNavigate(path);
+      }}
+    >
+      {active && (
+        <span
+          className={clsx(
+            'absolute left-0 top-0 bottom-0 w-1 rounded-r',
+            'bg-primary cursor-pointer'
+          )}
+        />
+      )}
+      <Icon className={`${isMobile ? 'w-7 h-7' : 'w-5 h-5'}`} />
+      <span className={`truncate ${isMobile ? 'text-lg' : ''}`}>{label}</span>
+    </button>
+  );
+};
+
 export default function DefaultLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -42,50 +97,37 @@ export default function DefaultLayout() {
 
   const { user } = useContext(GlobalContext);
 
-  const activePath = navItems.find((n) => location.pathname === n.path)?.path ?? '/';
+  const [activeMenu, setActiveMenu] = useState(null);
 
-  const activeLabel = navItems.find((n) => n.path === activePath)?.label ?? 'Dashboard';
+  const mainHeading = useMemo(() => {
+    if (location.pathname === '/') return 'Dashboard';
 
-  const go = (path: string) => {
+    const SplitPath = location.pathname.split('/');
+
+    const Path = SplitPath.length ? SplitPath[1] : '/';
+
+    const currentNavItem = navItems.find((n) => n.path.includes(Path))?.label;
+
+    if (SplitPath.length > 2 && SplitPath.includes('add')) {
+      return `Add ${currentNavItem}`;
+    } else if (SplitPath.length > 2 && SplitPath.includes('edit')) {
+      return `Edit ${currentNavItem}`;
+    } else if (SplitPath.length > 2 && SplitPath.includes('change-password')) {
+      return `Change Password Of ${currentNavItem}`;
+    } else if (SplitPath.length > 2) {
+      return `View ${currentNavItem}`;
+    } else {
+      return currentNavItem;
+    }
+  }, [location.pathname, navItems]);
+
+  const onNavigate = (path: string) => {
     navigate(path);
     setMobileOpen(false);
   };
 
-  type PropsTypes = {
-    label: string;
-    path: string;
-    Icon: any;
-    isMobile?: boolean;
-  };
-
-  /** NavItem button */
-  const NavBtn = ({ label, path, Icon }: PropsTypes) => {
-    const active = path === activePath;
-
-    return (
-      <button
-        className={clsx(
-          'cursor-pointer relative w-full text-left px-4 py-2 rounded-lg transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary',
-          'flex items-center gap-2', // Align icon & text
-          active
-            ? `${ACCENT_BG} ${ACCENT_TEXT} font-medium shadow-sm`
-            : 'hover:bg-gray-100 text-gray-900'
-        )}
-        type="button"
-        onClick={() => go(path)}
-      >
-        {active && (
-          <span
-            className={clsx(
-              'absolute left-0 top-0 bottom-0 w-1 rounded-r',
-              'bg-primary cursor-pointer'
-            )}
-          />
-        )}
-        <Icon className="w-5 h-5" />
-        <span className="truncate">{label}</span>
-      </button>
-    );
+  const onClickMenu = (menu: any) => {
+    setActiveMenu(menu);
   };
 
   const filteredNavItems = useMemo(() => {
@@ -118,7 +160,16 @@ export default function DefaultLayout() {
         {/* Nav */}
         <nav className="flex-1 flex flex-col gap-1">
           {filteredNavItems.map((n) => (
-            <NavBtn key={n.path} Icon={n.icon} label={n.label} path={n.path} />
+            <NavBtn
+              key={n.path}
+              label={n.label}
+              path={n.path}
+              onClickMenu={onClickMenu}
+              onNavigate={onNavigate}
+              Icon={n.icon}
+              // activePath={'/'}
+              activeMenu={activeMenu}
+            />
           ))}
         </nav>
 
@@ -154,7 +205,7 @@ export default function DefaultLayout() {
                     ACCENT
                   )}
                 >
-                  {APP_NAME}
+                  {APP_NAME.split('_').join(' ')}
                 </span>
                 <button
                   aria-label="Close menu"
@@ -165,20 +216,32 @@ export default function DefaultLayout() {
                   <X className="w-5 h-5 text-gray-700" />
                 </button>
               </div>
-              <nav className="flex flex-col gap-1">
-                {navItems.map((n) => (
-                  <NavBtn key={n.path} isMobile Icon={n.icon} label={n.label} path={n.path} />
-                ))}
-              </nav>
 
-              <div className="mt-4">
-                <button
-                  className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 border border-primary-200 rounded-lg hover:bg-primary-50 hover:border-primary-300 transition-colors cursor-pointer"
-                  onClick={handleLogout} // your logout function
-                >
-                  <LogOut className="w-5 h-5" />
-                  Logout
-                </button>
+              <div className="flex flex-col h-full justify-between">
+                <nav className={`flex flex-col gap-2`}>
+                  {filteredNavItems.map((n) => (
+                    <NavBtn
+                      key={n.path}
+                      isMobile
+                      Icon={n.icon}
+                      label={n.label}
+                      path={n.path}
+                      onClickMenu={onClickMenu}
+                      onNavigate={onNavigate}
+                      activeMenu={activeMenu}
+                      // activePath={'/'}
+                    />
+                  ))}
+                </nav>
+                <div className="mb-20">
+                  <button
+                    className="w-full flex items-center gap-2 p-4 text-lg font-medium text-primary-600 border border-primary-200 rounded-lg hover:bg-primary-50 hover:border-primary-300 transition-colors cursor-pointer"
+                    onClick={handleLogout} // your logout function
+                  >
+                    <LogOut className="w-7 h-7" />
+                    Logout
+                  </button>
+                </div>
               </div>
             </motion.aside>
           </div>
@@ -189,25 +252,27 @@ export default function DefaultLayout() {
       <div className="flex-1 flex flex-col overflow-scroll">
         {/* Header */}
         <header className="app-header h-16 flex items-center justify-between px-4 md:px-8 bg-white shadow-sm">
-          {/* Mobile hamburger */}
-          <button
-            aria-label="Open menu"
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400"
-            type="button"
-            onClick={() => setMobileOpen(true)}
-          >
-            <Menu className="w-5 h-5 text-gray-700" />
-          </button>
+          <div className="flex items-center gap-1">
+            {/* Mobile hamburger */}
+            <button
+              aria-label="Open menu"
+              className="md:hidden p-2 rounded-md hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400"
+              type="button"
+              onClick={() => setMobileOpen(true)}
+            >
+              <Menu className="w-5 h-5 text-gray-700" />
+            </button>
 
-          {/* Title */}
-          <h1 className="text-lg font-semibold truncate">{activeLabel}</h1>
+            {/* Title */}
+            <h1 className="text-lg font-semibold truncate">{mainHeading}</h1>
+          </div>
 
           <HeaderProfileMenu key={'header_profile-avatar'} user={user!} />
         </header>
 
         {/* Page Content Wrapper */}
         {/* <main className="flex-1 overflow-auto p-4 md:p-8">{children}</main> */}
-        <main className="flex-1 overflow-auto p-4 md:p-8">
+        <main className="flex-1 overflow-auto p-1 md:p-8">
           <AnimatePresence mode="wait">
             <Outlet />
           </AnimatePresence>
