@@ -31,9 +31,9 @@ const ViewSales: React.FC = () => {
       <div className="min-w-full mx-auto p-4">
         <Card className="p-6 shadow-sm rounded-2xl">
           <div className="flex gap-2 justify-start items-center mb-6">
-            <ArrowLeft className="cursor-pointer" onClick={onBack} />
+            {/* <ArrowLeft className="cursor-pointer" onClick={onBack} /> */}
 
-            <h2 className="text-2xl font-semibold text-gray-800">View Sales</h2>
+            {/* <h2 className="text-2xl font-semibold text-gray-800">View Sales</h2> */}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

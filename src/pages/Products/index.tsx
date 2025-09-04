@@ -112,6 +112,9 @@ const Products: React.FC = () => {
         case 'remark':
           return cellValue || '-';
 
+        case 'name':
+          return <span className="whitespace-nowrap"> {cellValue || '-'}</span>;
+
         case 'actions':
           return (
             <div className="relative flex items-center gap-2">
@@ -165,9 +168,9 @@ const Products: React.FC = () => {
   return (
     <AnimatedPage>
       <div className="p-4 space-y-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
           {/* Title */}
-          <h1 className="text-2xl font-semibold text-gray-800">Products</h1>
+          {/* <h1 className="text-2xl font-semibold text-gray-800">Products</h1> */}
 
           {/* Right section: Search + Button */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
@@ -202,7 +205,8 @@ const Products: React.FC = () => {
                   </div>
                 ) : null
               }
-              className="max-h-[400px] sm:max-h-[450px] md:max-h-[550px] lg:max-h-[650px] xl:max-h-[500px]"
+              // className="max-h-[400px] sm:max-h-[450px] md:max-h-[550px] lg:max-h-[650px] xl:max-h-[500px]"
+              className="max-h-[100%] sm:max-h-[500px] md:max-h-[550px] lg:max-h-[650px] xl:max-h-[500px]"
             >
               <TableHeader>
                 {columns.map((column) => (

@@ -34,7 +34,7 @@ const AppButton: React.FC<AppButtonProps> = ({
     <Button
       className={`relative font-medium transition-all duration-300
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500
-                  active:scale-95
+                  active:scale-95 h-14 text-lg md:h-10 md:text-md
                   ${className}`}
       color={color}
       endContent={endIcon}
@@ -42,7 +42,7 @@ const AppButton: React.FC<AppButtonProps> = ({
       isDisabled={isDisabled}
       isLoading={isLoading}
       radius={radius}
-      size={size}
+      // size={size}
       startContent={startIcon}
       variant={variant}
       onPress={onClick}

@@ -158,11 +158,11 @@ const AddEditSales: React.FC = () => {
       <div className="min-w-full mx-auto p-4">
         <Card className="p-6 shadow-sm rounded-2xl">
           <div className="flex gap-2 justify-start items-center mb-6">
-            <ArrowLeft className="cursor-pointer" onClick={onBack} />
+            {/* <ArrowLeft className="cursor-pointer" onClick={onBack} /> */}
 
-            <h2 className="text-2xl font-semibold text-gray-800">
+            {/* <h2 className="text-2xl font-semibold text-gray-800">
               {isEditMode ? 'Edit' : 'Create'} Sales
-            </h2>
+            </h2> */}
           </div>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             {/* Name Field */}
@@ -354,7 +354,7 @@ const AddEditSales: React.FC = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="text-right flex gap-2 justify-end">
+            <div className="text-right flex flex-col-reverse md:flex-row gap-2 justify-end">
               {/* <AppButton color="secondary" title="Back" type="button" onClick={onBack} /> */}
               {/* {!isEditMode && (
                 <AppButton
@@ -368,6 +368,8 @@ const AddEditSales: React.FC = () => {
                   }}
                 />
               )} */}
+              <AppButton color="secondary" title="Back" type="button" onClick={onBack} />
+
               <AppButton
                 className="w-full sm:w-auto"
                 color="primary"
