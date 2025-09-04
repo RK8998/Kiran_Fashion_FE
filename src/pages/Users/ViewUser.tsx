@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Chip } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft } from 'lucide-react';
+// import { ArrowLeft } from 'lucide-react';
 
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';

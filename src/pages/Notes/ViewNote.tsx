@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import AppButton from '@/components/AppButton';
 import { AnimatedPage } from '@/components/AnimatedPage';
 import { getNoteByIdService } from '@/services/notes';
-import { ArrowLeft } from 'lucide-react';
+// import { ArrowLeft } from 'lucide-react';
 
 const ViewNote: React.FC = () => {
   const navigate = useNavigate();
