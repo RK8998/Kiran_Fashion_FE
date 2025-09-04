@@ -97,7 +97,7 @@ export default function DefaultLayout() {
 
   const { user } = useContext(GlobalContext);
 
-  const [activeMenu, setActiveMenu] = useState(null);
+  const [activeMenu, setActiveMenu] = useState(location.pathname === '/' ? 'Dashboard' : null);
 
   const mainHeading = useMemo(() => {
     if (location.pathname === '/') return 'Dashboard';
