@@ -61,6 +61,7 @@ const Products: React.FC = () => {
         page,
         rows: rowsPerPage,
         search: debounceSearch,
+        sort: 'desc',
       };
       const response = await getProductsListService(params);
 
