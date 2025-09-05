@@ -14,15 +14,15 @@ import { AppToast, displaySuccessToast } from '@/helpers/toast';
 import { mutationOnErrorHandler } from '@/helpers';
 import { createSalesService, getSalesByIdService, updateSalesService } from '@/services/sales';
 
-const ACTIONS = {
-  save: 'save',
-  save_and_add_another: 'save_and_add_another',
-};
+// const ACTIONS = {
+//   save: 'save',
+//   save_and_add_another: 'save_and_add_another',
+// };
 
 const AddEditSales: React.FC = () => {
   const navigate = useNavigate();
   const { id: salesId } = useParams();
-  const [action, setAction] = useState<null | string>(null);
+  // const [action, setAction] = useState<null | string>(null);
 
   const isEditMode = Boolean(salesId);
 
@@ -418,7 +418,7 @@ const AddEditSales: React.FC = () => {
                 title={isEditMode ? 'Update' : 'Save Sale'}
                 type="submit"
                 onClick={() => {
-                  setAction(ACTIONS.save);
+                  // setAction(ACTIONS.save);
                   handleSubmit(onSubmit)();
                 }}
               />
