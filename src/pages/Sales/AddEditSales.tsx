@@ -39,11 +39,11 @@ const AddEditSales: React.FC = () => {
     },
     onSuccess: (response) => {
       displaySuccessToast(response?.message);
-      if (action === ACTIONS.save_and_add_another) {
-        reset();
-      } else {
-        navigate('/sales');
-      }
+      // if (action === ACTIONS.save_and_add_another) {
+      reset();
+      // } else {
+      //   navigate('/sales');
+      // }
     },
     onError: (error) => {
       mutationOnErrorHandler({ error: error as AxiosError });
