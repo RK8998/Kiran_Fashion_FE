@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Input, Card, Textarea } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
-// import { ArrowLeft } from 'lucide-react';
+import { MinusIcon, PlusIcon } from 'lucide-react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
@@ -25,6 +25,8 @@ const AddEditSales: React.FC = () => {
   const [action, setAction] = useState<null | string>(null);
 
   const isEditMode = Boolean(salesId);
+
+  const [numberOfEntries, setNumberOfEntries] = useState(1);
 
   const onBack = () => navigate(-1);
 
@@ -74,6 +76,7 @@ const AddEditSales: React.FC = () => {
         sell_amount: +data.sell_amount,
         discount: +data.discount,
         remark: data.remark,
+        number_of_entries: +numberOfEntries,
       };
 
       AppToast(onAddProduct(payload), 'Product adding in progress');
@@ -246,58 +249,60 @@ const AddEditSales: React.FC = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                Base Amount
-              </label>
-              <Controller
-                control={control}
-                name="base_amount"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    errorMessage={errors.base_amount && errors.base_amount.message}
-                    id="base_amount"
-                    isInvalid={!!errors.base_amount}
-                    placeholder="Enter base amount"
-                    radius="lg"
-                    type="number"
-                    value={field.value?.toString() ?? ''} // Convert number → string
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                )}
-                rules={{
-                  required: 'Base Amount is required',
-                }}
-              />
-            </div>
+            <div className="flex gap-2 justify-between items-center">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
+                  Base Amount
+                </label>
+                <Controller
+                  control={control}
+                  name="base_amount"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      errorMessage={errors.base_amount && errors.base_amount.message}
+                      id="base_amount"
+                      isInvalid={!!errors.base_amount}
+                      placeholder="Enter base amount"
+                      radius="lg"
+                      type="number"
+                      value={field.value?.toString() ?? ''} // Convert number → string
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                  rules={{
+                    required: 'Base Amount is required',
+                  }}
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                Sell Amount
-              </label>
-              <Controller
-                control={control}
-                name="sell_amount"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    errorMessage={errors.sell_amount && errors.sell_amount.message}
-                    id="sell_amount"
-                    isInvalid={!!errors.sell_amount}
-                    placeholder="Enter sell amount"
-                    radius="lg"
-                    type="number"
-                    value={field.value?.toString() ?? ''} // Convert number → string
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                )}
-                rules={{
-                  required: 'Sell Amount is required',
-                  validate: (value) =>
-                    value > baseAmount || 'Sell Amount should be greater than Base Amount',
-                }}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
+                  Sell Amount
+                </label>
+                <Controller
+                  control={control}
+                  name="sell_amount"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      errorMessage={errors.sell_amount && errors.sell_amount.message}
+                      id="sell_amount"
+                      isInvalid={!!errors.sell_amount}
+                      placeholder="Enter sell amount"
+                      radius="lg"
+                      type="number"
+                      value={field.value?.toString() ?? ''} // Convert number → string
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                  rules={{
+                    required: 'Sell Amount is required',
+                    validate: (value) =>
+                      value > baseAmount || 'Sell Amount should be greater than Base Amount',
+                  }}
+                />
+              </div>
             </div>
 
             <div>
@@ -352,6 +357,42 @@ const AddEditSales: React.FC = () => {
                 // }}
               />
             </div>
+
+            {/* <div itemID="number_of_entries" className="flex items-center gap-3">
+              <AppButton title="-" />
+              <Input
+                className="text-center"
+                id="number_of_entries"
+                radius="lg"
+                // type="number"
+                value={numberOfEntries.toString()}
+              />
+              <AppButton title="+" />
+            </div> */}
+
+            {!isEditMode ? (
+              <div className="flex items-center justify-center sm:justify-end gap-4 mt-8 mb-8">
+                <button
+                  className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-lg font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition"
+                  type="button"
+                  onClick={() => setNumberOfEntries((prev) => Math.max(prev - 1, 1))}
+                >
+                  <MinusIcon />
+                </button>
+
+                <div className="min-w-[60px] text-center text-2xl font-extrabold text-primary-600 bg-primary-50 border border-primary-200 px-4 py-2 rounded-lg shadow-sm">
+                  {numberOfEntries}
+                </div>
+
+                <button
+                  className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-lg font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition"
+                  type="button"
+                  onClick={() => setNumberOfEntries((prev) => prev + 1)}
+                >
+                  <PlusIcon />
+                </button>
+              </div>
+            ) : null}
 
             {/* Submit Button */}
             <div className="text-right flex flex-col-reverse md:flex-row gap-2 justify-end">
