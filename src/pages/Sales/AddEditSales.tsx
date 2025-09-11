@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Input, Card, Textarea } from '@heroui/react'; // adjust imports if needed
+import { Input } from '@heroui/react'; // adjust imports if needed
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { MinusIcon, PlusIcon } from 'lucide-react';
@@ -39,6 +39,7 @@ const AddEditSales: React.FC = () => {
     },
     onSuccess: (response) => {
       displaySuccessToast(response?.message);
+      setNumberOfEntries(1);
       // if (action === ACTIONS.save_and_add_another) {
       reset();
       // } else {
@@ -61,6 +62,7 @@ const AddEditSales: React.FC = () => {
     },
     onSuccess: (response) => {
       displaySuccessToast(response?.message);
+      setNumberOfEntries(1);
       navigate('/sales');
     },
     onError: (error) => {
@@ -159,57 +161,15 @@ const AddEditSales: React.FC = () => {
   return (
     <AnimatedPage>
       <div className="min-w-full mx-auto p-4">
-        <Card className="p-6 shadow-sm rounded-2xl">
-          <div className="flex gap-2 justify-start items-center mb-6">
-            {/* <ArrowLeft className="cursor-pointer" onClick={onBack} /> */}
-
-            {/* <h2 className="text-2xl font-semibold text-gray-800">
-              {isEditMode ? 'Edit' : 'Create'} Sales
-            </h2> */}
-          </div>
-          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-            {/* Name Field */}
-            <div>
-              {/* <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                Product
-              </label> */}
-              {/* <Controller
-                control={control}
-                name="product_id"
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    errorMessage={errors.product_id && errors.product_id.message}
-                    id="product_id"
-                    isInvalid={!!errors.product_id}
-                    isLoading={isLoadingProducts}
-                    name="product_id"
-                    placeholder="Select product"
-                    radius="lg"
-                    selectedKeys={field.value ? [field.value] : []} // match key as string
-                    onChange={(e) => {
-                      field.onChange(e);
-                      onChangeProducts(e.target.value);
-                    }}
-                    onSelectionChange={(keys) => {
-                      const selected = Array.from(keys)[0] as string;
-
-                      field.onChange(selected);
-                    }}
-                  >
-                    {productOptions.map((item: { key: string; label: string }) => (
-                      <SelectItem key={item.key}>{item.label}</SelectItem>
-                    ))}
-                  </Select>
-                )}
-                rules={{ required: 'Product is required' }}
-              /> */}
-
+        {/* <div className=""> */}
+        <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+          <div className="md:w-1/1 flex flex-col border border-primary-200 rounded-xl bg-white shadow-sm p-4">
+            <div className="flex-1 overflow-y-auto max-h-[220px] pr-1">
               <Controller
                 control={control}
                 name="product_id"
                 render={({ field }) => (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {productOptions.map((item: { key: string; label: string }) => {
                       const isSelected = field.value === item.key;
 
@@ -217,7 +177,7 @@ const AddEditSales: React.FC = () => {
                         <button
                           key={item.key}
                           className={[
-                            'cursor-pointer rounded-xl border-2 p-4 text-center transition-all duration-200',
+                            'cursor-pointer rounded-xl border-2 p-2 text-left transition-all duration-200',
                             'hover:shadow-sm hover:border-blue-400',
                             isSelected
                               ? 'border-blue-500 bg-blue-50 shadow-lg'
@@ -248,183 +208,160 @@ const AddEditSales: React.FC = () => {
                 <p className="text-red-500 text-sm mt-2">{String(errors.product_id.message)}</p>
               )}
             </div>
+          </div>
 
-            <div className="flex gap-2 justify-between items-center">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                  Base Amount
-                </label>
-                <Controller
-                  control={control}
-                  name="base_amount"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      errorMessage={errors.base_amount && errors.base_amount.message}
-                      id="base_amount"
-                      isInvalid={!!errors.base_amount}
-                      placeholder="Enter base amount"
-                      radius="lg"
-                      type="number"
-                      value={field.value?.toString() ?? ''} // Convert number → string
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  )}
-                  rules={{
-                    required: 'Base Amount is required',
-                  }}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                  Sell Amount
-                </label>
-                <Controller
-                  control={control}
-                  name="sell_amount"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      errorMessage={errors.sell_amount && errors.sell_amount.message}
-                      id="sell_amount"
-                      isInvalid={!!errors.sell_amount}
-                      placeholder="Enter sell amount"
-                      radius="lg"
-                      type="number"
-                      value={field.value?.toString() ?? ''} // Convert number → string
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  )}
-                  rules={{
-                    required: 'Sell Amount is required',
-                    validate: (value) =>
-                      value > baseAmount || 'Sell Amount should be greater than Base Amount',
-                  }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                Discount
-              </label>
-              <Controller
-                control={control}
-                name="discount"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    errorMessage={errors.discount && errors.discount.message}
-                    id="discount"
-                    isInvalid={!!errors.discount}
-                    placeholder="Enter discount"
-                    radius="lg"
-                    type="number"
-                    value={field.value?.toString() ?? ''} // Convert number → string
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+          <div className="md:w-1/1 flex flex-col border border-primary-200 rounded-xl bg-white shadow-sm p-4">
+            <div className="flex-1 overflow-y-auto space-y-5">
+              <div className="flex gap-2 justify-between items-center">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-0" htmlFor="title">
+                    Base Amount
+                  </label>
+                  <Controller
+                    control={control}
+                    name="base_amount"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        errorMessage={errors.base_amount && errors.base_amount.message}
+                        id="base_amount"
+                        isInvalid={!!errors.base_amount}
+                        placeholder="Enter base amount"
+                        radius="lg"
+                        type="number"
+                        value={field.value?.toString() ?? ''} // Convert number → string
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    )}
+                    rules={{
+                      required: 'Base Amount is required',
+                    }}
                   />
-                )}
-                // rules={{
-                //   required: 'Sell Amount is required',
-                //   validate: (value) =>
-                //     value > baseAmount || 'Sell Amount should be greater than Base Amount',
-                // }}
-              />
-            </div>
-
-            {/* Remark Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="title">
-                Remark
-              </label>
-              <Controller
-                control={control}
-                name="remark"
-                render={({ field }) => (
-                  <Textarea
-                    {...field}
-                    errorMessage={errors.remark && errors.remark.message}
-                    id="remark"
-                    isInvalid={!!errors.remark}
-                    placeholder="Enter remark"
-                    radius="lg"
-                    type="text"
-                  />
-                )}
-                // rules={{
-                //   required: 'Remark is required',
-                // }}
-              />
-            </div>
-
-            {/* <div itemID="number_of_entries" className="flex items-center gap-3">
-              <AppButton title="-" />
-              <Input
-                className="text-center"
-                id="number_of_entries"
-                radius="lg"
-                // type="number"
-                value={numberOfEntries.toString()}
-              />
-              <AppButton title="+" />
-            </div> */}
-
-            {!isEditMode ? (
-              <div className="flex items-center justify-center sm:justify-end gap-4 mt-8 mb-8">
-                <button
-                  className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-lg font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition"
-                  type="button"
-                  onClick={() => setNumberOfEntries((prev) => Math.max(prev - 1, 1))}
-                >
-                  <MinusIcon />
-                </button>
-
-                <div className="min-w-[60px] text-center text-2xl font-extrabold text-primary-600 bg-primary-50 border border-primary-200 px-4 py-2 rounded-lg shadow-sm">
-                  {numberOfEntries}
                 </div>
 
-                <button
-                  className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-lg font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition"
-                  type="button"
-                  onClick={() => setNumberOfEntries((prev) => prev + 1)}
-                >
-                  <PlusIcon />
-                </button>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-0" htmlFor="title">
+                    Sell Amount
+                  </label>
+                  <Controller
+                    control={control}
+                    name="sell_amount"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        errorMessage={errors.sell_amount && errors.sell_amount.message}
+                        id="sell_amount"
+                        isInvalid={!!errors.sell_amount}
+                        placeholder="Enter sell amount"
+                        radius="lg"
+                        type="number"
+                        value={field.value?.toString() ?? ''} // Convert number → string
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    )}
+                    rules={{
+                      required: 'Sell Amount is required',
+                      validate: (value) =>
+                        value > baseAmount || 'Sell Amount should be greater than Base Amount',
+                    }}
+                  />
+                </div>
               </div>
-            ) : null}
 
-            {/* Submit Button */}
-            <div className="text-right flex flex-col-reverse md:flex-row gap-2 justify-end">
-              {/* <AppButton color="secondary" title="Back" type="button" onClick={onBack} /> */}
-              {/* {!isEditMode && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-0" htmlFor="title">
+                  Discount
+                </label>
+                <Controller
+                  control={control}
+                  name="discount"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      errorMessage={errors.discount && errors.discount.message}
+                      id="discount"
+                      isInvalid={!!errors.discount}
+                      placeholder="Enter discount"
+                      radius="lg"
+                      type="number"
+                      value={field.value?.toString() ?? ''} // Convert number → string
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  )}
+                  // rules={{
+                  //   required: 'Sell Amount is required',
+                  //   validate: (value) =>
+                  //     value > baseAmount || 'Sell Amount should be greater than Base Amount',
+                  // }}
+                />
+              </div>
+
+              {/* Remark Field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-0" htmlFor="title">
+                  Remark
+                </label>
+                <Controller
+                  control={control}
+                  name="remark"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      errorMessage={errors.remark && errors.remark.message}
+                      id="remark"
+                      isInvalid={!!errors.remark}
+                      placeholder="Enter remark"
+                      radius="lg"
+                      type="text"
+                    />
+                  )}
+                />
+              </div>
+
+              {!isEditMode ? (
+                <div className="flex items-center justify-center sm:justify-end gap-4 mt-4 mb-4">
+                  <button
+                    className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-lg font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition"
+                    type="button"
+                    onClick={() => setNumberOfEntries((prev) => Math.max(prev - 1, 1))}
+                  >
+                    <MinusIcon />
+                  </button>
+
+                  <div className="min-w-[60px] text-center text-2xl font-extrabold text-primary-600 bg-primary-50 border border-primary-200 px-4 py-2 rounded-lg shadow-sm">
+                    {numberOfEntries}
+                  </div>
+
+                  <button
+                    className="flex h-12 w-12 items-center justify-center rounded-lg border border-gray-300 bg-white text-lg font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition"
+                    type="button"
+                    onClick={() => setNumberOfEntries((prev) => prev + 1)}
+                  >
+                    <PlusIcon />
+                  </button>
+                </div>
+              ) : null}
+
+              {/* Submit Button */}
+              <div className="text-right flex flex-row md:flex-row gap-2 justify-end">
+                <AppButton color="secondary" title="Back" type="button" onClick={onBack} />
+
                 <AppButton
-                  color="success"
+                  className="w-full sm:w-auto"
+                  color="primary"
                   isLoading={isPendingCreate || isPendingUpdate}
-                  title={'Save And Add Another'}
+                  title={isEditMode ? 'Update' : 'Save Sale'}
                   type="submit"
                   onClick={() => {
-                    setAction(ACTIONS.save_and_add_another);
-                    // handleSubmit(onSubmit)();
+                    // setAction(ACTIONS.save);
+                    handleSubmit(onSubmit)();
                   }}
                 />
-              )} */}
-              <AppButton color="secondary" title="Back" type="button" onClick={onBack} />
-
-              <AppButton
-                className="w-full sm:w-auto"
-                color="primary"
-                isLoading={isPendingCreate || isPendingUpdate}
-                title={isEditMode ? 'Update' : 'Save Sale'}
-                type="submit"
-                onClick={() => {
-                  // setAction(ACTIONS.save);
-                  handleSubmit(onSubmit)();
-                }}
-              />
+              </div>
             </div>
-          </form>
-        </Card>
+          </div>
+        </form>
+        {/* </div> */}
       </div>
     </AnimatedPage>
   );
